@@ -1,0 +1,36 @@
+import random, time
+def shortBubbleSort(alist):
+exchanges = True
+passnum = len(alist)-1
+while passnum > 0 and exchanges:
+exchanges = False
+for i in range(passnum):
+if alist[i]>alist[i+1]:
+exchanges = True
+temp = alist[i]
+alist[i] = alist[i+1]
+alist[i+1] = temp
+passnum = passnum-1
+size=10
+# loop to run shortBubbleSort for list lengths 10,15 and 20
+while size <=20:
+totalTime = 0
+# run each list length 10 times
+for ctr in range(10):
+alist = []
+#loop to generate the list of size with random numbers from 1-100
+for i in range(size):
+alist.append(random.randint(1,100))
+#calculate the run time
+start = time.clock()
+shortBubbleSort(alist)
+end = time.clock()
+totalTime = totalTime + (end-start)
+#calculate total run time for 10 runs
+#print the average run time
+print(‘Average time to sort list of length %d is %.10f’ %(size,float(totalTime)/10))
+size = size + 5
+OUTPUT
+Average time to sort list of length 10 is 0.0000122343
+Average time to sort list of length 15 is 0.0000241401
+Average time to sort list of length 20 is 0.0000429842
