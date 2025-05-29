@@ -1,0 +1,299 @@
+// Jordan Gillis
+// IST 311
+// Kochanov
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class Copymachine extends JFrame {
+private JPanel mainPanel,
+userPanel,
+subPanel1,
+subPanel2,
+subPanel3,
+subPanel4,
+subPanel5,
+centerPanel,
+statusPanel,
+confirmPanel;
+private JLabel label,
+email,
+pdfLabel,
+paperLabel,
+copyLabel,
+sortLabel,
+stapleLabel,
+userLabel;
+private JRadioButton studentUser,
+professorUser,
+staffUser,
+pdfButton,
+paperButton1,
+paperButton2,
+paperButton3,
+copyButton1,
+copyButton2,
+sortButton,
+stapleButton1,
+stapleButton2,
+stapleButton3,
+stapleButton4,
+yesButton,
+noButton;
+private JTextField emailTextField,
+pdfTextField,
+paperTextField,
+copyTextField,
+sortTextField,
+stapleTextField,
+userTextField;
+RadioButtonActionListener actionListner = new RadioButtonActionListener(); // Action
+Listener created here
+public Copymachine() {
+super("COPY MACHINE GENERATOR");
+//Main Panel Section
+mainPanel = new JPanel();
+mainPanel.setLayout(new BorderLayout ());
+mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Jordan Gillis Copy Machine 1.0", TitledBorder.LEFT, TitledBorder.TOP));
+//Center Panel Section
+centerPanel = new JPanel();
+centerPanel.setLayout(new GridLayout (2,1));
+mainPanel.add(centerPanel, BorderLayout.CENTER);
+//User Panel
+userPanel = new JPanel();
+userPanel.setLayout (new FlowLayout());
+userPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBord
+er(), "User ", TitledBorder.LEFT, TitledBorder.TOP));
+studentUser = new JRadioButton("Student ");
+professorUser = new JRadioButton("Professor ");
+staffUser = new JRadioButton("Staff ");
+userPanel.add(studentUser);
+userPanel.add(professorUser);
+userPanel.add(staffUser);
+mainPanel.add(userPanel, BorderLayout.NORTH);
+studentUser.addActionListener(actionListner); //Action Listener is set for
+studentUser
+professorUser.addActionListener(actionListner); //Action Listener is set for
+professorUser
+staffUser.addActionListener(actionListner); //Action Listener is set for staffUser
+//PDF Copy Panel
+subPanel1 = new JPanel();
+subPanel1.setLayout(new BorderLayout());
+subPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Copy in PDF Format", TitledBorder.LEFT, TitledBorder.TOP));
+pdfButton = new JRadioButton("Generate PDF Copy");
+subPanel1.add(pdfButton, BorderLayout.NORTH);
+email = new JLabel("Enter your email address: ");
+subPanel1.add(email, BorderLayout.WEST);
+emailTextField = new JTextField(20);
+subPanel1.add(emailTextField, BorderLayout.EAST);
+mainPanel.add(subPanel1, BorderLayout.WEST);
+RadioButtonActionListener actionListener = new RadioButtonActionListener();
+//This portion creates Action Listener Object
+pdfButton.addActionListener(actionListener); //Sets the Action Listener for the
+pdfButton
+//Paper Selection Panel
+subPanel2 = new JPanel();
+subPanel2.setLayout(new FlowLayout());
+subPanel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Paper Size", TitledBorder.LEFT, TitledBorder.TOP));
+label = new JLabel("Select Paper Size: ");
+subPanel2.add(label);
+paperButton1 = new JRadioButton("8.5 x 11");
+paperButton2 = new JRadioButton("8.5 x 14");
+paperButton3 = new JRadioButton("Letterhead");
+subPanel2.add(paperButton1);
+subPanel2.add(paperButton2);
+subPanel2.add(paperButton3);
+centerPanel.add(subPanel2);
+paperButton1.addActionListener(actionListener); //Portion Sets Action Listener
+for paperButton1
+paperButton2.addActionListener(actionListener); //Portion Sets Action Listener
+for paperButton2
+paperButton3.addActionListener(actionListener); //Portion Sets Action Listener
+for paperButton3
+//Copy Panel
+subPanel3 = new JPanel();
+subPanel3.setLayout(new GridLayout(2,1));
+subPanel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Copy Document", TitledBorder.LEFT, TitledBorder.TOP));
+label = new JLabel("Select What Copy Method You Would Like To Use: ");
+subPanel3.add(label);
+copyButton1 = new JRadioButton("One-Sided");
+copyButton2 = new JRadioButton("Two-Sided");
+subPanel3.add(copyButton1);
+subPanel3.add(copyButton2);
+label = new JLabel("Number of Copies: ");
+subPanel3.add(label);
+copyTextField = new JTextField(5);
+subPanel3.add(copyTextField);
+mainPanel.add(subPanel3, BorderLayout.EAST);
+copyButton1.addActionListener(actionListener); //Portion sets Action Listener for
+copyButton1
+copyButton2.addActionListener(actionListener); //Portion sets Action Listener for
+copyButton2
+//Sort Panel
+subPanel4 = new JPanel();
+subPanel4.setLayout(new FlowLayout());
+subPanel4.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Sort", TitledBorder.LEFT, TitledBorder.TOP));
+label = new JLabel("Sort Document: ");
+subPanel4.add(label);
+sortButton = new JRadioButton("Sort ");
+subPanel4.add(sortButton);
+centerPanel.add(subPanel4);
+sortButton.addActionListener(actionListener); //Portion Sets Action Listener for
+the sortButton
+//Staple Panel
+subPanel5 = new JPanel();
+subPanel5.setLayout(new BoxLayout(subPanel5, BoxLayout.Y_AXIS));
+subPanel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBor
+der(), "Staple", TitledBorder.LEFT, TitledBorder.TOP));
+label = new JLabel("Staple Format");
+subPanel5.add(label);
+stapleButton1 = new JRadioButton("Portrait in Left Corner");
+subPanel5.add(stapleButton1);
+stapleButton2 = new JRadioButton("Portrait in Right Corner");
+subPanel5.add(stapleButton2);
+stapleButton3 = new JRadioButton("Landscape in Left Corner");
+subPanel5.add(stapleButton3);
+stapleButton4 = new JRadioButton("Landscape in Right Corner");
+subPanel5.add(stapleButton4);
+centerPanel.add(subPanel5);
+stapleButton1.addActionListener(actionListener); //Portion sets Action Listener
+for stapleButton1
+stapleButton2.addActionListener(actionListener); //Portion sets Action Listener
+for stapleButton2
+stapleButton3.addActionListener(actionListener); //Portion sets Action Listener
+for stapleButton3
+stapleButton4.addActionListener(actionListener); //Portion sets Action Listener
+for stapleButton4
+//Status Panel
+statusPanel = new JPanel();
+statusPanel.setLayout(new FlowLayout());
+statusPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBo
+rder(), "Status of the Order", TitledBorder.LEFT, TitledBorder.TOP));
+userLabel = new JLabel("User "); //User Status Implement
+statusPanel.add(userLabel);
+userTextField = new JTextField(23);
+statusPanel.add(userTextField);
+centerPanel.add(statusPanel);
+pdfLabel = new JLabel("PDF Status "); //PDF Status
+statusPanel.add(pdfLabel);
+pdfTextField = new JTextField(23);
+statusPanel.add(pdfTextField);
+centerPanel.add(statusPanel);
+paperLabel = new JLabel("Paper Size Status "); //Paper Size Status
+statusPanel.add(paperLabel);
+paperTextField = new JTextField(23);
+statusPanel.add(paperTextField);
+centerPanel.add(statusPanel);
+copyLabel = new JLabel("Copy Status"); //Copy Status
+statusPanel.add(copyLabel);
+copyTextField = new JTextField(23);
+statusPanel.add(copyTextField);
+centerPanel.add(statusPanel);
+sortLabel = new JLabel("Sort Status"); // Sort Status
+statusPanel.add(sortLabel);
+sortTextField = new JTextField(23);
+statusPanel.add(sortTextField);
+centerPanel.add(statusPanel);
+stapleLabel = new JLabel("Staple Status"); //Staple Status
+statusPanel.add(stapleLabel);
+stapleTextField = new JTextField(23);
+centerPanel.add(statusPanel);
+//Order Confirmation Panel
+confirmPanel = new JPanel();
+confirmPanel.setLayout(new FlowLayout());
+confirmPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedB
+order(), "Confirm Order", TitledBorder.LEFT, TitledBorder.TOP));
+yesButton = new JRadioButton("YES");
+noButton = new JRadioButton("NO");
+confirmPanel.add(yesButton);
+confirmPanel.add(noButton);
+mainPanel.add(confirmPanel, BorderLayout.SOUTH);
+yesButton.addActionListener(actionListener); //Portion Sets Action Listener for
+yesButton
+noButton.addActionListener(actionListener); //Portion Sets Action Listener for
+noButton
+add(mainPanel);
+setSize(500, 400);
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+setLocationRelativeTo(null);
+setVisible(true);
+}
+//Action Listener class
+class RadioButtonActionListener implements ActionListener {
+public void actionPerformed(ActionEvent event) {
+JRadioButton button = (JRadioButton) event.getSource();
+if (button == pdfButton) {
+pdfTextField.setText("PDF is the Selected Copy");
+}
+if (button == paperButton1 ) {
+paperTextField.setText("8.5 x 11");
+}
+if (button == paperButton2 ) {
+paperTextField.setText("8.5 x 14");
+}
+if (button == paperButton3 ) {
+paperTextField.setText("Letterhead");
+}
+if (button == copyButton1) {
+copyTextField.setText("One-Sided");
+}
+if (button == copyButton2) {
+copyTextField.setText("Two-Sided");
+}
+if (button == sortButton) {
+sortTextField.setText("Sort Has Been Chosen");
+}
+if (button == stapleButton1) {
+stapleTextField.setText("Portrait with Left Corner");
+}
+if (button == stapleButton2) {
+stapleTextField.setText("Portrait with Right Corner");
+}
+if (button == stapleButton3) {
+stapleTextField.setText("Landscape with Left Corner");
+}
+if (button == stapleButton4) {
+stapleTextField.setText("Landscape with Right Corner");
+}
+if (button == pdfButton) {
+pdfTextField.setText("PDF is the Selected Type");
+}
+if (button == studentUser) {
+userTextField.setText("Student");
+}
+if (button == professorUser) {
+userTextField.setText("Professor");
+}
+if (button == staffUser) {
+userTextField.setText("Staff");
+}
+if (button == yesButton) {
+yesPane();
+}
+if (button == noButton) {
+noPane();
+}
+}
+private void yesPane() {
+JFrame f = new JFrame();
+JOptionPane.showMessageDialog(f,"Your order is completed");
+}
+private void noPane() {
+JFrame f = new JFrame();
+JOptionPane.showMessageDialog(f,"Would you like to complete your
+order?");
+}
+}
+public static void main(String[] args) {
+new Copymachine();
+}
+}
+Annotations
