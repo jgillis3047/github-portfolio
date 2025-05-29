@@ -1,0 +1,49 @@
+import java.util.Scanner;
+/**This program gives a description of test scores
+*/
+public class Project5
+{
+  public static void main(String[]args)
+  {
+    Scanner in = new Scanner(System.in);
+    
+    char choice=0;
+    do{
+      System.out.println("Enter student's test score");
+      double percent = in.nextDouble();
+      
+      if (percent>= 90)
+      {
+        System.out.println("You got an A, Keep up the amazing work!");
+        System.out.println("Would you like to enter another grade? Type Y");
+      }
+      else if (percent >= 80&& percent <90)
+      {
+        System.out.println("You got a B! Congrats!");
+        System.out.println("Would you like to enter another grade? Type Y");
+      }
+      else if (percent >= 70&& percent <80)
+      {
+        System.out.println("Decent Job... C");
+        System.out.println("Would you like to enter another grade? Type Y");
+      }
+      else if (percent >= 60&& percent <70)
+      {
+        System.out.println("I mean... Atleast you passed. I guess. You recieved a D");
+        System.out.println("Would you like to enter another grade? Type Y");
+      }
+      else if (percent <60)
+      {
+        System.out.println("You got an F. This might not be the path for you");
+        System.out.println("Would you like to enter another grade? Type Y");
+      }
+      choice=in.next().charAt(0);
+    }
+    while(choice=='Y');
+    System.out.println("Program has ended");
+  }
+}
+
+
+ 
+
