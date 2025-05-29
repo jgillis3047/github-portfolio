@@ -1,0 +1,124 @@
+// username: Jordan Gillis
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
+public class StocksGui extends JFrame{
+/**
+*
+*/
+private static final long serialVersionUID = 1L;
+private JLabel symbol,
+dividend,
+amountOfShares,
+purchaseValue,
+marketValue;
+private JTextField symbolTxt,
+dividendTxt,
+amountOfsharesTxt,
+purchaseValueTxt,
+marketValueTxt;
+private JButton calculateButton;
+private JTextArea displayProfit;
+private JPanel enterStockPanel,
+enterBuyPanel,
+enterMarketPanel,
+displayPanel,
+buttonPanel;
+private DividendStock z;
+public NumberFormat money = NumberFormat.getCurrencyInstance();
+public StocksGui() {
+super("Stock Market");
+setLayout(new GridLayout(5,2,1,1)); //set frame layout
+enterStockPanel = createEnterStock();
+enterBuyPanel = createEnterBuy();
+enterMarketPanel = createEnterMarketPrice();
+displayPanel = createDisplayPanel();
+buttonPanel = createButtonPanel();
+add(enterStockPanel);
+add(enterBuyPanel);
+add(enterMarketPanel);
+add(displayPanel);
+add(buttonPanel);
+setSize(350,350); //set the frame size
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+setVisible(true); //display frame
+}
+class ButtonHandler implements ActionListener {
+@Override
+public void actionPerformed(ActionEvent e) {
+if(e.getSource().equals(calculateButton)) {
+z = new DividendStock(symbolTxt.getText(),
+Double.parseDouble(dividendTxt.getText()));
+z.purchase(Integer.parseInt(amountOfsharesTxt.getText()),Integer.parseInt(amountOfsharesTxt
+.getText()));
+displayProfit.setText(money.format(z.getProfit(Double.parseDouble(marketValueTxt.getText())))
+);
+}
+}
+}
+public JPanel createEnterStock() {
+symbol = new JLabel("Symbol: ", SwingConstants.RIGHT);
+dividend = new JLabel("Dividend: ", SwingConstants.RIGHT);
+symbolTxt = new JTextField(10);
+symbolTxt.setToolTipText("Enter Stock Symbol here");
+dividendTxt = new JTextField(10);
+dividendTxt.setToolTipText("Enter dividend amount per share here");
+enterStockPanel = new JPanel();
+enterStockPanel.setLayout(new GridLayout(2,2,1,1));
+enterStockPanel.setBorder(BorderFactory.createTitledBorder("Stock Data Information"));
+enterStockPanel.add(symbol);
+enterStockPanel.add(symbolTxt);
+enterStockPanel.add(dividend);
+enterStockPanel.add(dividendTxt);
+return enterStockPanel;
+}
+public JPanel createEnterBuy() {
+amountOfShares = new JLabel("Total Shares: ", SwingConstants.RIGHT);
+purchaseValue = new JLabel("Buy Value: ", SwingConstants.RIGHT);
+amountOfsharesTxt = new JTextField(10);
+amountOfsharesTxt.setToolTipText("Total amount of Shares you want to purchase");
+purchaseValueTxt = new JTextField(10);
+purchaseValueTxt.setToolTipText("Enter the buy Value");
+enterBuyPanel = new JPanel();
+enterBuyPanel.setLayout(new GridLayout(2,2,1,1));
+enterBuyPanel.setBorder(BorderFactory.createTitledBorder("Purchase"));
+enterBuyPanel.add(amountOfShares);
+enterBuyPanel.add(amountOfsharesTxt);
+enterBuyPanel.add(purchaseValue);
+enterBuyPanel.add(purchaseValueTxt);
+return enterBuyPanel;
+}
+public JPanel createEnterMarketPrice() {
+marketValue = new JLabel("Market Price: ", SwingConstants.RIGHT);
+marketValueTxt = new JTextField(10);
+marketValueTxt.setToolTipText("Enter current market Value");
+enterMarketPanel = new JPanel();
+enterMarketPanel.setLayout(new GridLayout(1,2,1,1));
+enterMarketPanel.setBorder(BorderFactory.createTitledBorder("Market Value"));
+enterMarketPanel.add(marketValue);
+enterMarketPanel.add(marketValueTxt);
+return enterMarketPanel;
+}
+public JPanel createDisplayPanel() {
+displayPanel = new JPanel();
+displayPanel.setBorder(BorderFactory.createTitledBorder("Profit Calculation"));
+displayProfit = new JTextArea(2,15);
+displayProfit.setEditable(false);
+displayPanel.add(displayProfit);
+return displayPanel;
+}
+public JPanel createButtonPanel() {
+ButtonHandler handler = new ButtonHandler();
+buttonPanel = new JPanel();
+calculateButton = new JButton("GENERATE");
+calculateButton.addActionListener(handler);
+buttonPanel.add(calculateButton);
+return buttonPanel;
+}
+public static void main(String[] args) {
+StocksGui x = new StocksGui();
+}
+}
+Annotations
