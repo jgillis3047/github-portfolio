@@ -1,0 +1,59 @@
+
+// username: Jordan Gillis
+/**
+* A Stock object represents
+* purchases of shares of a
+* company's stock.
+*
+*/
+public class Stocks {
+private String symbol;
+private int totalShares;
+private double totalCost;
+/**
+* Initializes a new Stock with no shares purchased
+* @param symbol = the symbol for the trading shares
+*/
+public Stocks(String symbol) {
+this.symbol = symbol;
+totalShares = 0;
+totalCost = 0.0;
+}
+/**
+* Returns the total profit or loss earned on this stock
+* @param currentPrice = the price of the share on the stock exchange
+* @return
+*/
+public double getProfit(double currentPrice) {
+double marketValue = totalShares * currentPrice;
+return marketValue - totalCost;
+}
+/**
+* Record purchase of the given shares at the given price
+* @param shares = the number of shares purchased
+* @param pricePerShare = the price paid for each share of stock
+*/
+public void purchase(int shares, double pricePerShare) {
+totalShares += shares;
+totalCost += shares * pricePerShare;
+}
+public String getSymbol() {
+return symbol;
+}
+public void setSymbol(String symbol) {
+this.symbol = symbol;
+}
+public int getTotalShares() {
+return totalShares;
+}
+public void setTotalShares(int totalShares) {
+this.totalShares = totalShares;
+}
+public double getTotalCost() {
+return totalCost;
+}
+public void setTotalCost(double totalCost) {
+this.totalCost = totalCost;
+}
+}
+Annotations
