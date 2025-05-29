@@ -1,0 +1,15 @@
+//usernameJordanGillis
+public class DividendStock extends Stocks {
+private double dividends;
+public DividendStock(String symbol, double d) {
+super(symbol);
+dividends = 0.0;
+}
+public double getProfit(double currentPrice) {
+return super.getProfit(currentPrice) + dividends;
+}
+public void payDividend(double amountPerShare) {
+dividends += amountPerShare * getTotalShares();
+}
+}
+Annotations
