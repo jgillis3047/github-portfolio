@@ -1,0 +1,455 @@
+-- Create the SupplierOrderLine table
+CREATE TABLE SupplierOrderLine (
+SupplierOrderID INT PRIMARY KEY AUTO_INCREMENT,
+InventoryItemID INT NOT NULL,
+Subtotal DECIMAL(10, 2) NOT NULL,
+QuantityOrdered INT NOT NULL,
+FOREIGN KEY (InventoryItemID) REFERENCES Inventory_Item(InventoryItemID)
+);
+-- Create the database
+CREATE DATABASE sunsets_restaurant;
+USE sunsets_restaurant;
+-- Create the Customer table
+CREATE TABLE Customer (
+CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(100) NOT NULL,
+Contact VARCHAR(100),
+Email VARCHAR(100)
+);
+INSERT INTO CUSTOMER (CustomerID, Name, Contact, Email) VALUES 
+(1, 'Diane Chen', '001-097-981-4131x042', 'seancalhoun@yahoo.com')
+, (2, 'Carmen Sharp', '507-591-7606x14489', 'millerernest@gmail.com')
+, (3, 'Ashley Jones', '(895)793-7629', 'ohopkins@hotmail.com')
+, (4, 'Tyler Ross', '001-661-800-2687x0187', 'acontreras@gmail.com')
+, (5, 'Patrick Robertson', '001-258-316-6770x58261', 'rebekah31@haas.com')
+, (6, 'Richard Rivas', '914.507.5962x0640', 'patricia19@perez-smith.biz')
+, (7, 'Connor Bennett', '119.227.5493x754', 'johnsonelizabeth@gill.com')
+, (8, 'Stacie Alvarado', '+1-465-217-6628x850', 'rodriguezmelissa@yahoo.com')
+, (9, 'Robert Smith', '263.771.3942', 'slong@riley.com')
+, (10, 'Maria Jefferson', '204.077.8227', 'kburton@montgomery.com')
+, (11, 'Alex Hall', '019.609.5917', 'yrodriguez@turner.com')
+, (12, 'Angela Young', '001-921-131-7757', 'lyonsdylan@yahoo.com')
+, (13, 'Tony Austin', '355-940-8824x6342', 'brooksmichael@salinas-fisher.com')
+, (14, 'Mitchell Campbell', '(605)865-2513', 'hjacobs@garcia.com')
+, (15, 'Cynthia King', '001-820-414-4965x15226', 'sydneyjohnson@hotmail.com')
+, (16, 'Nicole Harrell', '001-774-412-3363x2295', 'oadams@gmail.com')
+, (17, 'Mario White', '174.373.7472', 'imccoy@yahoo.com')
+, (18, 'Jessica Mccoy', '+1-294-758-8254x4106', 'mcollins@hotmail.com')
+, (19, 'Jon Brady', '001-113-658-4720x543', 'reevesjohnathan@gmail.com')
+, (20, 'Andres Walton', '811-574-9496x7216', 'keithwilliams@gomez-flynn.com');
+
+
+-- Create the Reservation table
+CREATE TABLE Reservation (
+ReservationID INT PRIMARY KEY AUTO_INCREMENT,
+CustomerID INT NOT NULL,
+ReservationDate TIMESTAMP NOT NULL,
+PartySize INT NOT NULL,
+TableNumber INT,
+FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+, FOREIGN KEY (TableNumber) REFERENCES SunsetTable(TableNumber)
+);
+
+INSERT INTO Reservation (ReservationID, CustomerID, ReservationDate, PartySize, TableNumber)
+VALUES 
+(20, 2, '2024-04-20 12:00:00', 2, 0001),  -- Booked
+(21, 3, '2024-04-20 15:30:00', 4, 0002),  -- Booked
+(22, 4, '2024-04-19 18:45:00', 4, 0001),  -- Booked
+(23, 5, '2024-04-20 10:00:00', 2, 0003),  -- Open
+(24, 6, '2024-04-20 12:15:00', 4, 0006),  -- Open
+(25, 7, '2024-04-20 13:00:00', 15, 0019), -- Open
+(26, 8, '2024-04-20 16:30:00', 11, 0015), -- Open
+(27, 8, '2024-04-20 18:00:00', 20, 0018), -- Booked
+(28, 4, '2024-04-19 20:00:00', 3, 0009),  -- Booked
+(29, 5, '2024-04-20 19:30:00', 4, 0012),  -- Booked
+(30, 6, '2024-04-20 20:15:00', 3, 0007),  -- Booked
+(31, 7, '2024-04-20 21:45:00', 5, 0014),  -- Booked
+(32, 8, '2024-04-19 22:30:00', 5, 0016),  -- Booked
+(33, 2, '2024-04-19 17:45:00', 4, 0010),  -- Booked
+(34, 20, '2024-04-20 11:30:00', 12, 0013),-- Open
+(35, 19, '2024-04-19 14:00:00', 11, 0011),-- Open
+(36, 17, '2024-04-19 16:00:00', 4, 0008), -- Open
+(37, 15, '2024-04-20 09:00:00', 3, 0004), -- Open
+(38, 15, '2024-04-20 21:00:00', 2, 0005), -- Booked
+(39, 3, '2024-04-19 11:15:00', 2, 0003);  -- Open
+
+
+-- Create the Menu table
+CREATE TABLE Menu_Item (
+ItemID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(100) NOT NULL,
+Description VARCHAR(200),
+Price DECIMAL(10, 2) NOT NULL,
+Category VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Menu_Item (ItemID, Name, Description, Price, Category)
+VALUES 
+(101, 'Grilled Salmon', 'Perfectly grilled salmon served with a side of asparagus and a light lemon butter sauce.', 25.00, 'Dinner'),
+(102, 'Caesar Salad', 'Crisp romaine lettuce tossed with our homemade Caesar dressing, croutons, and topped with shaved Parmesan cheese.', 12.00, 'Appetizer'),
+(103, 'Margherita Pizza', 'Classic Margherita with a flavorful tomato sauce, fresh mozzarella, basil, and a drizzle of olive oil on a crispy crust.', 18.00, 'Dinner'),
+(104, 'Mushroom Risotto', 'Creamy risotto cooked with a variety of mushrooms, white wine, garlic, and finished with a touch of truffle oil.', 22.00, 'Dinner'),
+(105, 'Pulled Pork Sandwich', 'Slow-cooked pulled pork smothered in BBQ sauce, served on a toasted bun with coleslaw.', 15.00, 'Lunch'),
+(106, 'Vegan Burger', 'A plant-based patty topped with lettuce, tomato, and our special sauce. Served with sweet potato fries.', 16.00, 'Lunch'),
+(107, 'Tomato Soup', 'Rich and creamy tomato soup topped with a swirl of cream and served with a side of crusty bread.', 10.00, 'Appetizer'),
+(108, 'Chicken Tikka Masala', 'Tender chicken pieces marinated in spices and yogurt, cooked in a creamy tomato sauce. Served with rice.', 20.00, 'Dinner'),
+(109, 'Chocolate Lava Cake', 'Decadent warm chocolate cake with a gooey center, served with a scoop of vanilla ice cream.', 8.00, 'Dessert'),
+(110, 'Tiramisu', 'Classic Italian dessert layered with mascarpone cheese, ladyfingers soaked in espresso, and dusted with cocoa powder.', 9.00, 'Dessert'),
+(111, 'Spring Rolls', 'Fresh vegetables and vermicelli wrapped in rice paper, served with a spicy peanut dipping sauce.', 8.00, 'Appetizer'),
+(112, 'French Fries', 'Crispy golden French fries served with a side of our signature spicy ketchup.', 5.00, 'Side'),
+(113, 'Gazpacho', 'Chilled Spanish soup made from ripe tomatoes, cucumbers, bell peppers, onions, and seasoned with garlic, olive oil, and vinegar.', 7.00, 'Appetizer'),
+(114, 'Spinach Quiche', 'Fluffy egg quiche with fresh spinach, onions, and feta cheese, baked in a buttery pastry crust.', 12.00, 'Lunch'),
+(115, 'Iced Latte', 'Rich espresso blended with ice and topped with a splash of milk of your choice.', 4.50, 'Beverage'),
+(116, 'Fresh Lemonade', 'Homemade lemonade made from freshly squeezed lemons, the perfect refreshment for any day.', 3.50, 'Beverage'),
+(117, 'Pan Seared Duck', 'Duck breast pan-seared to perfection, served with a sweet and sour cherry sauce.', 27.00, 'Dinner'),
+(118, 'Caprese Salad', 'Slices of fresh mozzarella and ripe tomatoes layered with basil leaves and drizzled with balsamic glaze.', 11.00, 'Appetizer'),
+(119, 'Raspberry Sorbet', 'Refreshing raspberry sorbet, made with real fruit and a touch of lemon.', 6.00, 'Dessert'),
+(120, 'Sangria', 'Refreshing blend of red wine, fresh fruit, and a splash of brandy, served chilled.', 7.00, 'Beverage');
+
+
+-- Create the Table table
+CREATE TABLE SunsetTable (
+TableNumber INT PRIMARY KEY,
+Capacity INT NOT NULL,
+Location VARCHAR(50) NOT NULL,
+Status VARCHAR(20) NOT NULL
+);
+
+INSERT INTO SunsetTable (TableNumber, Capacity, Location, Status)
+VALUES 
+(0001, 6, 'Southwest', 'Booked'),
+(0002, 6, 'Southwest', 'Booked'),
+(0003, 6, 'Southwest', 'Open'),
+(0004, 6, 'Southeast', 'Open'),
+(0005, 4, 'Southeast', 'Booked'),
+(0006, 4, 'Northwest', 'Open'),
+(0007, 4, 'Northeast', 'Booked'),
+(0008, 2, 'Northeast', 'Open'),
+(0009, 2, 'Northeast', 'Booked'),
+(0010, 6, 'Northwest', 'Booked'),
+(0011, 8, 'Southwest', 'Open'),
+(0012, 8, 'Southeast', 'Booked'),
+(0013, 10, 'Northwest', 'Open'),
+(0014, 12, 'Northeast', 'Booked'),
+(0015, 12, 'Northwest', 'Open'),
+(0016, 12, 'Northeast', 'Booked'),
+(0017, 15, 'Southeast', 'Open'),
+(0018, 20, 'Southwest', 'Booked'),
+(0019, 20, 'Southwest', 'Open'),
+(0020, 20, 'Southeast', 'Booked');
+
+-- Create the Order table
+CREATE TABLE Orders (
+OrderID INT PRIMARY KEY AUTO_INCREMENT,
+CustomerID INT NOT NULL,
+OrderDate TIMESTAMP NOT NULL,
+TotalAmount DECIMAL(10, 2) NOT NULL,
+Status VARCHAR(20) NOT NULL,
+WaitStaffID INT NOT NULL,
+FOREIGN KEY (WaitStaffID) REFERENCES WaitStaff(WaitStaffID)
+, FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount, Status, WaitStaffID)
+VALUES 
+(1, 2, '2024-04-20', 85.00, 'Completed', 2097),  
+(2, 3, '2024-04-20', 120.00, 'Completed', 2097),  
+(3, 4, '2024-04-19', 110.00, 'Completed', 4934),  
+(4, 5, '2024-04-20', 50.00, 'Pending', 4934),     
+(5, 6, '2024-04-20', 100.00, 'Completed', 8473),  
+(6, 7, '2024-04-20', 300.00, 'Completed', 7257), 
+(7, 8, '2024-04-20', 220.00, 'Pending', 7257),    
+(8, 8, '2024-04-20', 400.00, 'Completed', 2094),  
+(9, 4, '2024-04-19', 75.00, 'Pending', 2302),     
+(10, 5, '2024-04-20', 90.00, 'Completed', 2302),   
+(11, 6, '2024-04-20', 70.00, 'Pending', 2305),     
+(12, 7, '2024-04-20', 125.00, 'Completed', 2305),  
+(13, 8, '2024-04-19', 100.00, 'Pending', 2098),    
+(14, 2, '2024-04-19', 80.00, 'Completed', 2098), 
+(15, 20, '2024-04-20', 240.00, 'Pending', 2303), 
+(16, 19, '2024-04-19', 220.00, 'Completed', 2303),
+(17, 17, '2024-04-19', 80.00, 'Completed', 2097),  
+(18, 15, '2024-04-20', 60.00, 'Pending', 2302),   
+(19, 15, '2024-04-20', 40.00, 'Completed', 2302), 
+(20, 3, '2024-04-19', 45.00, 'Pending', 2302);
+
+
+-- Create the Staff table
+CREATE TABLE Staff (
+StaffID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(100) NOT NULL,
+Position VARCHAR(50) NOT NULL,
+Shift VARCHAR(200),
+Contact VARCHAR(100),
+Staff_Type VARCHAR(200)
+);
+
+INSERT INTO Staff (StaffID, Name, Position, Shift, Contact, Staff_Type)
+VALUES 
+(123, 'John Doe', 'Manager', 'Morning 9 AM - 5 PM', '001-123-4567', 'Full-time'),
+(234, 'Jane Smith', 'Waitress', 'Evening 3 PM - 11 PM', '002-234-5678', 'Part-time'),
+(345, 'Michael Brown', 'Chef', 'Morning 8 AM - 4 PM', '003-345-6789', 'Full-time'),
+(456, 'Linda White', 'Hostess', 'Night 11 PM - 7 AM', '004-456-7890', 'Part-time'),
+(567, 'James Johnson', 'Bartender', 'Evening 5 PM - 1 AM', '005-567-8901', 'Full-time'),
+(678, 'Patricia Williams', 'Waiter', 'Morning 9 AM - 5 PM', '006-678-9012', 'Part-time'),
+(789, 'Robert Jones', 'Chef Assistant', 'Evening 3 PM - 11 PM', '007-789-0123', 'Full-time'),
+(987, 'Jennifer Taylor', 'Barista', 'Morning 8 AM - 4 PM', '008-890-1234', 'Part-time'),
+(876, 'Michael Miller', 'Manager', 'Night 10 PM - 6 AM', '009-901-2345', 'Full-time'),
+(765, 'Elizabeth Davis', 'Waitress', 'Evening 4 PM - 12 AM', '010-012-3456', 'Part-time'),
+(654, 'William Wilson', 'Chef', 'Morning 7 AM - 3 PM', '011-123-4567', 'Full-time'),
+(543, 'Jessica Moore', 'Hostess', 'Night 11 PM - 7 AM', '012-234-5678', 'Part-time'),
+(756, 'Daniel Thomas', 'Bartender', 'Evening 5 PM - 1 AM', '013-345-6789', 'Full-time'),
+(837, 'Nancy Lee', 'Waiter', 'Morning 9 AM - 5 PM', '014-456-7890', 'Part-time'),
+(376, 'Matthew Harris', 'Chef Assistant', 'Evening 3 PM - 11 PM', '015-567-8901', 'Full-time'),
+(374, 'Sandra Martin', 'Barista', 'Morning 8 AM - 4 PM', '016-678-9012', 'Part-time'),
+(372, 'Christopher Jackson', 'Manager', 'Night 10 PM - 6 AM', '017-789-0123', 'Full-time'),
+(282, 'Barbara Clark', 'Waitress', 'Evening 4 PM - 12 AM', '018-890-1234', 'Part-time'),
+(348, 'Paul Rodriguez', 'Chef', 'Morning 7 AM - 3 PM', '019-901-2345', 'Full-time'),
+(384, 'Donna Lewis', 'Hostess', 'Night 11 PM - 7 AM', '020-012-3456', 'Part-time');
+
+-- Create the Feedback table
+CREATE TABLE Feedback (
+FeedbackID INT PRIMARY KEY AUTO_INCREMENT,
+CustomerID INT NOT NULL,
+Rating INT,
+Comments VARCHAR(200),
+FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+INSERT INTO Feedback (FeedbackID, CustomerID, Rating, Comments)
+VALUES
+(601, 1, 5, 'Excellent service, very pleased!'),
+(602, 2, 4, 'Good service overall but room for improvement.'),
+(603, 3, 3, 'Average experience, expected more.'),
+(604, 4, 3, 'Service was below expectations, delays in response.'),
+(605, 5, 4, 'Issues were not resolved, quite dissatisfied.'),
+(606, 6, 5, 'Fantastic service! Will definitely return.'),
+(607, 7, 2, 'Not happy with the service. Needs a lot of improvement.'),
+(608, 8, 1, 'Terrible experience, will not be coming back.'),
+(609, 9, 4, 'Good experience overall, but could be quicker.'),
+(610, 10, 5, 'Outstanding service! Highly recommend.'),
+(611, 11, 2, 'Slow service, and food was cold.'),
+(612, 12, 3, 'Mediocre service, nothing impressive.'),
+(613, 13, 4, 'Great service, just a minor delay.'),
+(614, 14, 1, 'Very bad service, extremely disappointed.'),
+(615, 15, 5, 'Excellent! Everything was perfect.'),
+(616, 16, 3, 'Service was okay, not very engaging.'),
+(617, 17, 4, 'Very good service, polite staff.'),
+(618, 18, 2, 'Poor service, very unprofessional.'),
+(619, 19, 3, 'Average service, could use some improvements.'),
+(620, 20, 5, 'Perfect service, very attentive and professional.');
+
+-- Create the Vendor table
+CREATE TABLE Vendor (
+VendorID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(100) NOT NULL,
+Contact VARCHAR(50),
+Email VARCHAR(100)
+);
+
+INSERT INTO Vendor (VendorID, Name, Contact, Email)
+VALUES
+(9982342, 'Johnson Jackson', '(717) 555-4342', 'Johnson.JacksonAssociates@gmail.com'),
+(9982343, 'Smith Enterprises', '(614) 555-9342', 'SmithEnterprises@example.com'),
+(9982344, 'Anderson & Sons', '(212) 555-2341', 'info@andersonsons.com'),
+(9982345, 'Wilson Co.', '(415) 555-8765', 'wilsonco@wilsonco.net'),
+(9982346, 'Miller Supplies', '(202) 555-1122', 'sales@millersupplies.com'),
+(9982347, 'Brown Industries', '(303) 555-7438', 'info@brownindustries.com'),
+(9982348, 'Taylor Manufacturing', '(512) 555-6241', 'contact@taylormanufacturing.com'),
+(9982349, 'Martinez Corporation', '(714) 555-8923', 'martinezcorp@example.com'),
+(9982350, 'Garcia & Co.', '(626) 555-3241', 'info@garciaandco.com'),
+(9982351, 'Lopez Enterprises', '(770) 555-2198', 'lopezenterprises@example.com'),
+(9982352, 'Hernandez Supplies', '(818) 555-8842', 'sales@hernandezsupplies.com'),
+(9982353, 'Gonzalez Industries', '(972) 555-7734', 'gonzalezindustries@example.com'),
+(9982354, 'Perez Manufacturing', '(404) 555-6621', 'info@perezmanufacturing.com'),
+(9982355, 'Sanchez & Sons', '(210) 555-5348', 'sanchezsons@example.com'),
+(9982356, 'Ramirez Co.', '(817) 555-9871', 'contact@ramirezco.com'),
+(9982357, 'Torres Corporation', '(956) 555-3641', 'info@torrescorp.com'),
+(9982358, 'Flores Enterprises', '(903) 555-8927', 'floresenterprises@example.com'),
+(9982359, 'Gomez & Co.', '(713) 555-1198', 'info@gomezandco.com'),
+(9982360, 'Reyes Manufacturing', '(469) 555-6542', 'sales@reyesmanufacturing.com');
+
+-- Create the Inventory table
+CREATE TABLE Inventory_Item (
+InventoryItemID INT PRIMARY KEY AUTO_INCREMENT,
+Name VARCHAR(100) NOT NULL,
+Quantity INT NOT NULL,
+Location VARCHAR(200),
+Status INT NOT NULL,
+VendorID INT NOT NULL,
+FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
+);
+
+INSERT INTO Inventory_Item (InventoryItemID, Name, Quantity, Location, Status, VendorID)
+VALUES
+(134436, 'Flour', 150, '456 Elm Street Pittsburgh, PA 15222', 1, 9982360),
+(134437, 'Salt', 200, '789 Oak Avenue Philadelphia, PA 19103', 1, 9982359),
+(134438, 'Rice', 120, '101 Maple Lane Allentown, PA 18101', 1, 9982358),
+(134439, 'Coffee Beans', 80, '210 Pine Street Scranton, PA 18503', 1, 9982346),
+(134440, 'Olive Oil', 0, '313 Walnut Street Erie, PA 16501', 0, 9982347),
+(134441, 'Chicken Breast', 100, '515 Cedar Street Bethlehem, PA 18015', 1, 9982348),
+(134442, 'Beef', 80, '616 Spruce Street Lancaster, PA 17602', 1, 9982349),
+(134443, 'Pork Chops', 0, '717 Birch Street York, PA 17401', 0, 9982350),
+(134444, 'Tomatoes', 200, '818 Willow Street Reading, PA 19601', 1, 9982351),
+(134445, 'Lettuce', 150, '919 Elmwood Avenue Harrisburg, PA 17101', 1, 9982352),
+(134446, 'Onions', 120, '1020 Oakwood Drive Pittsburgh, PA 15201', 1, 9982353),
+(134447, 'Potatoes', 100, '1121 Pinehurst Lane Philadelphia, PA 19102', 1, 9982354),
+(134448, 'Carrots', 80, '1222 Maplewood Drive Allentown, PA 18102', 1, 9982355),
+(134449, 'Broccoli', 70, '1323 Sprucewood Lane Scranton, PA 18501', 1, 9982356),
+(134450, 'Green Beans', 60, '1424 Cedarwood Lane Erie, PA 16502', 1, 9982357),
+(134451, 'Cheese', 100, '1525 Birchwood Lane Bethlehem, PA 18016', 1, 9982358),
+(134452, 'Eggs', 120, '1626 Oakhurst Lane Lancaster, PA 17603', 1, 9982359),
+(134453, 'Milk', 150, '1727 Pinehurst Lane York, PA 17402', 1, 9982360),
+(134454, 'Butter', 100, '1828 Elmwood Avenue Reading, PA 19602', 1, 9982352),
+(134455, 'Yogurt', 80, '1929 Oakwood Drive Harrisburg, PA 17102', 1, 9982353);
+
+-- Create the Payment table
+CREATE TABLE Payment (
+PaymentID INT PRIMARY KEY AUTO_INCREMENT,
+OrderID INT NOT NULL,
+Amount DECIMAL(10, 2) NOT NULL,
+PaymentMethod VARCHAR(50) NOT NULL,
+TransactionDate DATE NOT NULL,
+FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+
+INSERT INTO Payment (OrderID, Amount, PaymentMethod, TransactionDate)
+VALUES
+(1, 85.00, 'Credit Card', '2024-04-20'),
+(2, 120.00, 'Debit Card', '2024-04-20'),
+(3, 110.00, 'Credit Card', '2024-04-19'),
+(4, 50.00, 'PayPal', '2024-04-20'),
+(5, 100.00, 'Cash', '2024-04-20'),
+(6, 300.00, 'Credit Card', '2024-04-20'),
+(7, 220.00, 'Debit Card', '2024-04-20'),
+(8, 400.00, 'Credit Card', '2024-04-20'),
+(9, 75.00, 'PayPal', '2024-04-19'),
+(10, 90.00, 'Credit Card', '2024-04-20'),
+(11, 70.00, 'Debit Card', '2024-04-20'),
+(12, 125.00, 'Cash', '2024-04-20'),
+(13, 100.00, 'Credit Card', '2024-04-19'),
+(14, 80.00, 'Debit Card', '2024-04-19'),
+(15, 240.00, 'Credit Card', '2024-04-20'),
+(16, 220.00, 'Cash', '2024-04-19'),
+(17, 80.00, 'Debit Card', '2024-04-19'),
+(18, 60.00, 'Credit Card', '2024-04-20'),
+(19, 40.00, 'PayPal', '2024-04-20'),
+(20, 45.00, 'Cash', '2024-04-19');
+
+-- Create the SupplierOrder table
+CREATE TABLE SupplierOrder (
+SupplierOrderID INT PRIMARY KEY AUTO_INCREMENT,
+ChefID INT NOT NULL,
+TotalAmount DECIMAL(10, 2) NOT NULL,
+VendorID INT NOT NULL,
+OrderDate DATE NOT NULL,
+FOREIGN KEY (ChefID) REFERENCES Chef(ChefID)
+, FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
+);
+
+INSERT INTO SupplierOrder (SupplierOrderID, ChefID, TotalAmount, VendorID, OrderDate)
+VALUES 
+(123435535, 89293, 2344.33, 9982342, '2024-04-10'), 
+(123435536, 28378, 1500.50, 9982343, '2024-04-11'),
+(123435537, 28326, 2750.75, 9982344, '2024-04-12'),
+(123435538, 89293, 1820.00, 9982345, '2024-04-13'),
+(123435539, 89293, 1950.90, 9982346, '2024-04-14'),
+(123435540, 89293, 2100.40, 9982347, '2024-04-15'),
+(123435541, 48221, 1600.55, 9982348, '2024-04-16'),
+(123435542, 48221, 1890.33, 9982349, '2024-04-17'),
+(123435543, 28378, 1400.47, 9982350, '2024-04-18'),
+(123435544, 28378, 2300.22, 9982351, '2024-04-19'),
+(123435545, 28378, 2200.15, 9982352, '2024-04-20'),
+(123435546, 28326, 2000.00, 9982353, '2024-04-21'),
+(123435547, 28326, 2450.25, 9982354, '2024-04-22'),
+(123435548, 28326, 2750.10, 9982355, '2024-04-23'),
+(123435549, 28326, 2550.00, 9982356, '2024-04-24'),
+(123435550, 18371, 1700.75, 9982357, '2024-04-25'),
+(123435551, 18371, 1450.55, 9982358, '2024-04-26'),
+(123435552, 18371, 1900.88, 9982359, '2024-04-27'),
+(123435553, 18371, 2100.42, 9982360, '2024-04-28'),
+(123435554, 18371, 1800.95, 9982342, '2024-04-29');
+
+
+-- Create the SupplierOrderLine table
+CREATE TABLE SupplierOrderLine (
+SupplierOrderLineID INT PRIMARY KEY AUTO_INCREMENT,
+SupplierOrderID INT NOT NULL,
+InventoryItemID INT NOT NULL,
+Subtotal DECIMAL(10, 2) NOT NULL,
+QuantityOrdered INT NOT NULL,
+FOREIGN KEY (SupplierOrderID) REFERENCES SupplierOrder(SupplierOrderID),
+FOREIGN KEY (InventoryItemID) REFERENCES Inventory_Item(InventoryItemID)
+);
+
+INSERT INTO SupplierOrderLine (SupplierOrderLineID, SupplierOrderID, InventoryItemID, Subtotal, QuantityOrdered)
+VALUES
+(21123, 123435535, 134436, 2344.33, 15),
+(21124, 123435536, 134437, 750.25, 5),
+(21125, 123435536, 134438, 750.25, 25),
+(21126, 123435537, 134439, 2750.75, 55),
+(21127, 123435538, 134440, 1820.00, 36),
+(21128, 123435539, 134441, 1950.90, 39),
+(21129, 123435540, 134442, 2100.40, 42),
+(21130, 123435541, 134443, 800.28, 16),
+(21131, 123435541, 134444, 800.27, 20),
+(21132, 123435542, 134445, 945.17, 19),
+(21133, 123435542, 134446, 945.16, 18),
+(21134, 123435543, 134447, 700.24, 14),
+(21135, 123435543, 134448, 700.23, 14),
+(21136, 123435544, 134449, 1150.11, 23),
+(21137, 123435544, 134450, 1150.11, 22),
+(21138, 123435545, 134451, 2200.15, 44),
+(21139, 123435546, 134452, 2000.00, 40),
+(21140, 123435547, 134453, 2450.25, 49),
+(21141, 123435548, 134454, 1375.05, 27),
+(21142, 123435548, 134455, 1375.05, 26);
+
+
+-- Create the SupplierOrderLine table
+CREATE TABLE SupplierOrderLine (
+SupplierOrderLineID INT PRIMARY KEY AUTO_INCREMENT,
+SupplierOrderID INT NOT NULL,
+InventoryItemID INT NOT NULL,
+Subtotal DECIMAL(10, 2) NOT NULL,
+QuantityOrdered INT NOT NULL,
+FOREIGN KEY (SupplierOrderID) REFERENCES SupplierOrder(SupplierOrderID),
+FOREIGN KEY (InventoryItemID) REFERENCES Inventory_Item(InventoryItemID)
+);
+
+-- Create the Chef Table
+
+CREATE TABLE Chef (
+ChefID INT PRIMARY KEY AUTO_INCREMENT, 
+StaffID INT NOT NULL,
+FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+);
+
+
+
+INSERT INTO WaitStaff (WaitStaffID, StaffID) VALUES 
+(4934, 385),
+(8473, 386),
+(7257, 387),
+(2016, 388),
+(2094, 389),
+(2095, 390),
+(2096, 391),
+(2097, 234), 
+(2098, 282),
+(2099, 456), 
+(2300, 392),
+(2301, 384), 
+(2302, 837), 
+(2303, 765), 
+(2304, 543), 
+(2305, 678);
+
+INSERT INTO Chef (ChefID, StaffID) VALUES 
+(89293, 345),
+(18371, 348),
+(48221, 654),
+(28326, 376),
+(28378, 789);
+
