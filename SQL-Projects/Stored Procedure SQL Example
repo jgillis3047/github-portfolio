@@ -1,3 +1,4 @@
+-- This SQL Code is an original, fictional example created to demonstrate data transformation and view logic for portfolio purposes. All object names and business logic have been generalized and are not based on any real or proprietary system.
 CREATE OR REPLACE PROCEDURE EXAMPLE_DATABASE.EXAMPLE.SP_EXAMPLEPROCEDURE("REFRESHFLAG" FLOAT)
 RETURNS VARCHAR(16777216)
 LANGUAGE JAVASCRIPT
