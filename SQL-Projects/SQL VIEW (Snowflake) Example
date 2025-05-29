@@ -1,3 +1,4 @@
+-- This SQL Code is an original, fictional example created to demonstrate data transformation and view logic for portfolio purposes. All object names and business logic have been generalized and are not based on any real or proprietary system.
 create or replace view EXAMPLE_DATABASE.EXAMPLE.VW_EXAMPLE(
 ID,
 CASEINCIDENT,
