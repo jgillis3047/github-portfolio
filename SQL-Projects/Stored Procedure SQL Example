@@ -1,0 +1,221 @@
+CREATE OR REPLACE PROCEDURE EXAMPLE_DATABASE.EXAMPLE.SP_EXAMPLEPROCEDURE("REFRESHFLAG" FLOAT)
+RETURNS VARCHAR(16777216)
+LANGUAGE JAVASCRIPT
+EXECUTE AS CALLER
+AS '
+if (REFRESHFLAG == 0)
+    {
+    REFRESHFLAG=datarefreshcheck(''EXAMPLE_PROD.EXAMPLE.EXAMPLE1,EXAMPLE_PROD.EXAMPLE.EXAMPLE2'',''EXAMPLE_PROD.EXAMPLE.EXAMPLEPROCEDURE'');
+    }
+    if (REFRESHFLAG == 1)
+    {
+result = ExecuteQuery (`
+INSERT INTO SQL_LOG(pName,pStart) 
+VALUES(''SP_EXAMPLEPROCEDURE'',GETDATE())
+;`)
+result = ExecuteQuery (`
+create or replace temporary table TMP_POP AS
+SELECT
+    A.ID
+    ,A.Companyid
+    ,A.startdt
+    ,a.setupdt
+    ,a.systemtype
+    ,a.statusid
+    ,a.completiondt
+    ,a.removaldt
+FROM
+    EXAMPLE_PROD.EXAMPLE.EXAMPLE1 a
+WHERE
+    A.statusid in(3,2);`)
+    
+result = ExecuteQuery (`
+create or replace temporary table TMP_DAYS AS
+Select
+   a.id
+   ,a.statusid
+   ,A.startdt
+   ,cast(a.rundt as date) rundt
+from
+    TMP_POP t
+    join EXAMPLE_PROD.EXAMPLE.EXAMPLE2 a on t.id = a.id and cast(a.rundt as date) > cast(A.startdt as date) and a.statusid in (''2'',''B'')
+union all
+Select
+   a.id
+   ,a.statusid
+   ,A.startdt
+   ,cast(a.rundt as date) rundt
+from
+    TMP_POP t
+    join EXAMPLE_PROD.EXAMPLE.EXAMPLE3 a on t.id = a.id and cast(a.rundt as date) > cast(A.startdt as date) and a.statusid in (''2'',''B'')
+union all
+Select
+   a.id
+   ,a.statusid
+   ,A.startdt
+   ,cast(a.rundt as date) rundt
+from
+    TMP_POP t
+    join EXAMPLE_PROD.EXAMPLE.EXAMPLE4 a on t.id = a.id and cast(a.rundt as date) > cast(A.startdt as date) and a.statusid in (''2'',''B'');`)
+    
+result = ExecuteQuery (`
+create or replace temporary table TMP_UNIQUE_DAYS AS
+Select
+    a.id
+   ,A.startdt
+   ,Min(rundt) rundt
+from
+    TMP_DAYS a
+GROUP BY
+     a.id
+   ,A.startdt;`)
+   
+result = ExecuteQuery (`
+create or replace temporary table TMP_LATE_INCIDENT AS
+select
+    f.Id,
+    f.Trandate,
+    tt.TranType,
+    s.TranStatusCode,
+    s.TranStatus,
+    f.tranamount
+from
+    EXAMPLE_PROD.EXAMPLE.EXAMPLE5 f
+    JOIN TMP_POP Z ON F.ID = Z.ID
+    left join EXAMPLE_PROD.EXAMPLE.EXAMPLE6 tt on f.TranTypeId = tt.TranTypeId
+    left join EXAMPLE_PROD.EXAMPLE.EXAMPLE7 s on f.TranStatusId= s.TranStatusId
+where
+    tt.TranType = ''Late Incident''
+    and s.TranStatusCode in (''A'',''B'',''V'')
+order by
+    1,2;`)
+    
+result = ExecuteQuery (`
+create or replace temporary table TMP_POP1 AS
+SELECT
+    A.ID
+    ,A.companyid
+    ,A.startdt
+    ,a.setupdt
+    ,a.companytype
+    ,a.completiondt
+    ,a.removaldt
+    ,a.statusid
+    ,B.Trandate
+    ,B.tranamount
+    ,B.Amount_Of_Late_Incident
+FROM
+    TMP_POP A
+    JOIN
+        (SELECT
+            A.ID,a.companyid,MIN(CAST(b.Trandate AS DATE)) Trandate,sum(traNamount)tranamount,count(a.ID) Amount_Of_Late_Incident
+         FROM
+            TMP_POP A
+            LEFT JOIN  TMP_LATE_INCIDENT B
+                ON A.ID = B.ID
+            LEFT JOIN TMP_DAYS C
+                ON A.ID = C.ID AND CAST(b.Trandate AS DATE) = C.RUNDT
+                    LEFT JOIN TMP_UNIQUE_DAYS D
+                ON A.ID = D.ID AND CAST(b.Trandate AS DATE) BETWEEN CAST(Dateadd(day,1,D.startdt) AS DATE)  AND D.RUNDT
+         WHERE
+            b.TranStatusCode ilike ''A''
+            and CAST(B.Trandate AS DATE) between CAST(Dateadd(day,1,A.startdt) AS DATE) and Current_Date()
+            AND (C.ID IS NOT NULL OR D.ID IS NOT NULL)
+         GROUP BY
+            A.ID
+            ,a.companyid
+        )B
+        ON A.companyid = B.companyid;`)
+        
+result = ExecuteQuery (`
+create or replace table EXAMPLEPROCEDURE AS
+SELECT Distinct
+     A.ID
+    ,A.companyid
+    ,A.startdt AS START_DATE
+    ,a.setupdt AS SET_UP_DATE
+    ,a.companytype AS COMPANY_TYPE
+    ,a.statusid AS STATUS
+    ,a.completiondt AS COMPLETION_DATE
+    ,a.removaldt AS REMOVAL_DATE
+    ,A.Num_Of_Late_Incident AS NUMBER_LATE_INCIDENT 
+    ,A.Trandate AS INCIDENT_ASSESSED
+    ,A.tranamount AS INCIDENT_AMOUNT 
+    ,B.Trandate AS INCIDENT_WAIVED
+    ,B.tranamount AS INCIDENT_WAIVED_AMOUNT
+    ,B.Amount_Of_Late_Incident AS AMOUNT_OF_LATE_INCIDENTS
+    ,C.CompanyGROUP AS COMPANY_GROUP
+    ,case when IFNULL(B.tranamount,0)*-1 < A.tranamount and ifnull(A.tranamount,0) > 0 then ''Not Approved'' else ''Approved'' end SECTION
+    ,CASE WHEN D.companyid IS NOT NULL THEN 1 ELSE 0 END REOPENED
+    ,c.LateIncidentAmt
+FROM
+    TMP_POP1 A
+    LEFT JOIN
+        (SELECT
+            A.ID,A.companyid,MIN(CAST(b.Trandate AS DATE)) Trandate,sum(B.tranamount)tranamount,count(a.ID) Amount_Of_Late_Incident
+         FROM
+            TMP_POP1 A
+            LEFT JOIN  TMP_LATE_INCIDENT B
+                ON A.ID = B.ID
+         WHERE
+            b.TranStatusCode ilike ''W''
+            and CAST(B.Trandate AS DATE) between CAST(A.Trandate AS DATE) and CURRENT_DATE()
+         GROUP BY
+            A.ID,A.companyid
+        )B
+        ON A.companyid = B.companyid
+    LEFT JOIN EXAMPLE_PROD.EXAMPLE.EXAMPLE8 C ON A.ID = C.ID
+    LEFT JOIN
+        (select distinct C.Id ,C.CompanyId, IncidentName, CT.CompletionDate AS ReopenedDt
+         from EXAMPLE_PROD.EXAMPLE.EXAMPLE9 as CM
+         join EXAMPLE_PROD.EXAMPLE.EXAMPLE10 as CT on CT.SituationId=CM.SituationId
+         join EXAMPLE_PROD.EXAMPLE.EXAMPLE11 as C on C.CompanyId=CT.CompanyId
+         where BMT.CompletionDate is not null and bm.IncidentName = ''Reopened'') D
+        ON A.Companyid = D.Companyid
+where
+    case when IFNULL(B.tranamount,0)*-1 < A.tranamount and ifnull(A.tranamount,0) > 0 then ''Not Approved'' else ''Approved'' end = ''Not Approved''
+    AND B.TRANDATE IS NULL;`)
+
+result = ExecuteQuery (`
+    UPDATE EXAMPLE.EXAMPLE.SQL_LOG 
+    SET pEnd = GETDATE(), pStatus = ''Completed''
+    WHERE pName = ''SP_EXAMPLE_PROCEDURE'' 
+    AND cast(pStart as date) = cast(GETDATE() as DATE)  AND pEnd is null;`)
+
+}
+function datarefreshcheck(SourceTableNames, DestTableName)
+  {
+  try {
+   cmd=     `  select concat(concat('' select case when  LEAST('',listagg(concat(''SYSTEM$LAST_CHANGE_COMMIT_TIME('''''', table2.value, '''''')''), '','')), '') > SYSTEM$LAST_CHANGE_COMMIT_TIME(''''${DestTableName}'''') then 1 else 0 end '')
+    from table(split_to_table( ''${SourceTableNames}'','','')) as table2`
+  var stmt = snowflake.createStatement( {sqlText: cmd} );
+  var rs = stmt.execute();
+  rs.next();
+  cmd = rs.getColumnValue(1);
+  var stmt = snowflake.createStatement( {sqlText: cmd} );
+  var rs = stmt.execute();
+    rs.next();
+  return rs.getColumnValue(1);
+   }
+            catch(err) {
+        result =  "failed: code: " + err.code + " | state: " + err.state;
+        result += "\\\\n  message: " + err.message;
+        result += "\\\\nstack trace:\\\\n" + err.stacktracetxt;
+        throw result;
+        } 
+  }
+function ExecuteQuery( queryString) {
+        stmt = snowflake.createStatement( {sqlText: queryString});
+        try{
+            rs = stmt.execute();
+             result = "SUCCESS";
+             return result;
+        }
+        catch(err) {
+        result =  "failed: code: " + err.code + " | state: " + err.state;
+        result += "\\\\n  message: " + err.message;
+        result += "\\\\nstack trace:\\\\n" + err.stacktracetxt;
+throw result;
+        }
+    }
+';
