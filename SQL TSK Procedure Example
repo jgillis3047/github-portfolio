@@ -1,0 +1,6 @@
+-- This SQL Code is an original, fictional example created to demonstrate data transformation and view logic for portfolio purposes. All object names and business logic have been generalized and are not based on any real or proprietary system.
+CREATE OR REPLACE TASK EXAMPLE_DATABASE.EXAMPLE.SP_EXAMPLE_PROCEDURE 
+  WAREHOUSE = JORDAN_GILLIS_SAMPLE_WAREHOUSE
+  SCHEDULE = 'USING CRON 0/15 5-14 * * * America/Los_Angeles'
+  USER_TASK_TIMEOUT_MS = 3000000
+  AS CALL EXAMPLE_DATABASE.EXAMPLE.TSK_SP_EXAMPLE_PROCEDURE 
