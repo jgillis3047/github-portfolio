@@ -1,0 +1,110 @@
+-- How much total revenue did each date generate from orders?
+SELECT OrderDate, SUM(TotalAmount) AS TotalRevenue
+FROM Orders
+GROUP BY OrderDate
+ORDER BY OrderDate;
+
+-- What are the top 5 most popular menu items based on order frequency?
+SELECT mi.Name, COUNT(*) AS OrderCount
+FROM Orders o
+JOIN Menu_Item mi ON o.ItemID = mi.ItemID
+GROUP BY mi.Name
+ORDER BY OrderCount DESC
+LIMIT 5;
+
+SELECT COUNT(*) AS ReservationCount
+FROM Reservation
+WHERE DAYOFWEEK(ReservationDate) IN (6, 7) 
+AND ReservationDate BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 WEEK);
+
+-- Query 1: Who are the customers with reservations from yesterday and today, and what are their reservation details?
+SELECT Customer.Name, Reservation.ReservationDate, Reservation.PartySize, Reservation.TableNumber
+FROM Reservation
+JOIN Customer ON Reservation.CustomerID = Customer.CustomerID
+WHERE DATE(Reservation.ReservationDate) BETWEEN '2024-04-20 00:00:00' AND CURRENT_DATE;
+
+-- Query 2: What customers left a 5 rating and how many 5 ratings did they leave? 
+SELECT Name, Rating, COUNT(*) AS NumberOfFeedbacks
+FROM Feedback a
+LEFT JOIN Customer b on a.CustomerId=b.CustomerId
+GROUP BY Rating, Name
+ORDER BY Rating, Name DESC;
+
+-- Query 3: Which invetory items have less than 50 quantity present in our stock? 
+SELECT Name, Quantity
+FROM Inventory_Item
+WHERE Quantity < 50;
+
+-- Query 4: What is the total revenue for April 20th, 2024? 
+SELECT SUM(TotalAmount) AS DailySales
+FROM Orders
+WHERE DATE(OrderDate) = '2024-04-20';  
+
+-- Query 5: How many orders has each Wait Staff member processed?
+SELECT s.Name, s.Position, COUNT(o.OrderID) AS OrdersProcessed
+FROM WaitStaff AS ws
+JOIN Staff AS s ON ws.StaffID = s.StaffID
+JOIN Orders AS o ON ws.WaitStaffID = o.WaitStaffID
+GROUP BY s.Name, s.Position;
+
+select * from Staff
+
+-- Query 6: How many payments for the month of March were PayPal payments and what was the date?
+SELECT Customer.CustomerID, Customer.Name, Payment.PaymentMethod, Payment.Amount, Payment.TransactionDate
+FROM Payment
+JOIN Orders ON Payment.OrderID = Orders.OrderID
+JOIN Customer ON Orders.CustomerID = Customer.CustomerID
+WHERE Payment.PaymentMethod = 'PayPal'
+  AND Payment.TransactionDate BETWEEN '2024-03-01' AND '2024-03-31'
+ORDER BY Payment.TransactionDate DESC;
+
+-- Query 7: Who are the top 5 spending customers the past week?
+SELECT Customer.Name, SUM(Payment.Amount) AS TotalSpent
+FROM Payment
+JOIN Orders ON Payment.OrderID = Orders.OrderID
+JOIN Customer ON Orders.CustomerID = Customer.CustomerID
+WHERE Payment.TransactionDate BETWEEN '2024-04-20' AND CURRENT_DATE
+GROUP BY Customer.CustomerID, Customer.Name
+ORDER BY TotalSpent DESC
+LIMIT 5;
+
+
+-- Query 8: Which tables in the "Southwest" location have been most booked in the past 20 days?
+SELECT Reservation.TableNumber, COUNT(*) AS TimesBooked
+FROM Reservation
+JOIN SunsetTable ON Reservation.TableNumber = SunsetTable.TableNumber
+WHERE Reservation.ReservationDate >= DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY)
+  AND SunsetTable.Location = 'Southwest'
+GROUP BY Reservation.TableNumber
+ORDER BY TimesBooked DESC;
+
+-- Query 9: When was the most recent order placed with each vendor, and what was the amount?
+SELECT Vendor.Name, LastOrder.LastOrderDate, SupplierOrder.TotalAmount AS LastOrderAmount
+FROM Vendor
+JOIN (
+    SELECT 
+        VendorID, 
+        MAX(OrderDate) AS LastOrderDate
+    FROM SupplierOrder
+    GROUP BY VendorID
+) AS LastOrder ON Vendor.VendorID = LastOrder.VendorID
+JOIN SupplierOrder ON Vendor.VendorID = SupplierOrder.VendorID
+    AND LastOrder.LastOrderDate = SupplierOrder.OrderDate
+ORDER BY LastOrder.LastOrderDate DESC;
+
+/* Query 10: Who are the top 5 suppliers based on the total value of orders they have supplied,
+and what are the average quantities per order for these suppliers?
+*/
+SELECT
+    Vendor.Name AS SupplierName,
+    COUNT(DISTINCT SupplierOrder.SupplierOrderID) AS TotalOrders,
+    SUM(SupplierOrderLine.Subtotal) AS TotalOrderValue,
+    AVG(SupplierOrderLine.QuantityOrdered) AS AverageQuantityPerOrder
+FROM SupplierOrder
+JOIN SupplierOrderLine ON SupplierOrder.SupplierOrderID = SupplierOrderLine.SupplierOrderID
+JOIN Vendor ON SupplierOrder.VendorID = Vendor.VendorID
+GROUP BY Vendor.VendorID, Vendor.Name
+ORDER BY TotalOrderValue DESC
+LIMIT 5;
+
+
